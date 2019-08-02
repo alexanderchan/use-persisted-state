@@ -9,8 +9,12 @@ const usePersistedState = (initialState, key, { get, set }) => {
 
   // subscribe to `storage` change events
   useEventListener('storage', ({ key: k, newValue }) => {
+    if (k !== key) {
+      return;
+    }
+
     const newState = JSON.parse(newValue);
-    if (k === key && state !== newState) {
+    if (state !== newState) {
       setState(newState);
     }
   });
@@ -26,16 +30,13 @@ const usePersistedState = (initialState, key, { get, set }) => {
   }, []);
 
   // Only persist to storage if state changes.
-  useEffect(
-    () => {
-      // persist to localStorage
-      set(key, state);
+  useEffect(() => {
+    // persist to localStorage
+    set(key, state);
 
-      // inform all of the other instances in this tab
-      globalState.current.emit(state);
-    },
-    [state]
-  );
+    // inform all of the other instances in this tab
+    globalState.current.emit(state);
+  }, [state]);
 
   return [state, setState];
 };
