@@ -1,8 +1,10 @@
 const createStorage = provider => ({
   get(key, defaultValue) {
     const json = provider.getItem(key);
+
+    console.log(json);
     // eslint-disable-next-line no-nested-ternary
-    return json === null
+    return json === null || typeof json !== 'string'
       ? typeof defaultValue === 'function'
         ? defaultValue()
         : defaultValue
