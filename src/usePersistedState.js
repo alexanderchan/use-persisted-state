@@ -13,7 +13,6 @@ const usePersistedState = (initialState, key, { get, set }) => {
       return;
     }
 
-    console.log(newValue);
     const newState = JSON.parse(newValue);
     if (state !== newState) {
       setState(newState);
