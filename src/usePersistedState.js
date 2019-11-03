@@ -7,6 +7,9 @@ const usePersistedState = (initialState, key, { get, set }) => {
   const globalState = useRef(null);
   const [state, setState] = useState(() => get(key, initialState));
 
+  useEffect(() => {
+    setState(get(key, initialState));
+  }, [key, initialState]);
   // subscribe to `storage` change events
   useEventListener('storage', ({ key: k, newValue }) => {
     if (k !== key) {
@@ -27,7 +30,7 @@ const usePersistedState = (initialState, key, { get, set }) => {
     return () => {
       globalState.current.deregister();
     };
-  }, []);
+  }, [key, setState, initialState]);
 
   // Only persist to storage if state changes.
   useEffect(() => {
